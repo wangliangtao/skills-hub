@@ -117,9 +117,7 @@ pub async fn get_tool_status(store: State<'_, SkillStore>) -> Result<ToolStatusD
         for adapter in &adapters {
             let ok = is_tool_installed(adapter)?;
             let key = adapter.id.as_key().to_string();
-            let skills_dir = resolve_default_path(adapter)?
-                .to_string_lossy()
-                .to_string();
+            let skills_dir = resolve_default_path(adapter)?.to_string_lossy().to_string();
             tools.push(ToolInfoDto {
                 key: key.clone(),
                 label: adapter.display_name.to_string(),
@@ -521,7 +519,10 @@ pub async fn unsync_skill_from_tool(
             if !any_installed {
                 return Ok::<_, anyhow::Error>(());
             }
-            group.into_iter().map(|a| a.id.as_key().to_string()).collect()
+            group
+                .into_iter()
+                .map(|a| a.id.as_key().to_string())
+                .collect()
         } else {
             vec![tool.clone()]
         };
